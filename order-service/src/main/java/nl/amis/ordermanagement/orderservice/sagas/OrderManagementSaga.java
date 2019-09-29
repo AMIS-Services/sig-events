@@ -1,63 +1,37 @@
 package nl.amis.ordermanagement.orderservice.sagas;
 
-import nl.amis.ecommerce.commands.CreateInvoiceCommand;
-import nl.amis.ecommerce.commands.CreateShippingCommand;
-import nl.amis.ecommerce.commands.UpdateOrderStatusCommand;
-import nl.amis.ordermanagement.orderservice.aggregates.OrderStatus;
-import nl.amis.ecommerce.events.InvoiceCreatedEvent;
-import nl.amis.ecommerce.events.OrderCreatedEvent;
-import nl.amis.ecommerce.events.OrderShippedEvent;
-import nl.amis.ecommerce.events.OrderUpdatedEvent;
+import nl.amis.ecommerce.events.*;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
-import org.axonframework.modelling.saga.StartSaga;
-import org.axonframework.spring.stereotype.Saga;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.util.UUID;
+import java.util.logging.Logger;
 
-@Saga
 public class OrderManagementSaga {
 
-    @Inject
+    private final static Logger LOG = Logger.getLogger(OrderManagementSaga.class.getName());
+
+    @Autowired
     private transient CommandGateway commandGateway;
 
-    @StartSaga
-    @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent){
-        String paymentId = UUID.randomUUID().toString();
-        System.out.println("Saga invoked");
+        LOG.info("Saga invoked with orderid " + orderCreatedEvent.orderId);
 
-        //associate Saga
+        // Associate this Saga with the shipmentId
+        String paymentId = UUID.randomUUID().toString();
         SagaLifecycle.associateWith("paymentId", paymentId);
 
-        System.out.println("order id" + orderCreatedEvent.orderId);
-
-        //send the commands
-        commandGateway.send(new CreateInvoiceCommand(paymentId, orderCreatedEvent.orderId));
+        // TODO send command
     }
 
-    @SagaEventHandler(associationProperty = "paymentId")
     public void handle(InvoiceCreatedEvent invoiceCreatedEvent){
-        String shippingId = UUID.randomUUID().toString();
 
-        System.out.println("Saga continued");
+        LOG.info("Saga continued");
 
-        //associate Saga with shipping
-        SagaLifecycle.associateWith("shipping", shippingId);
+        // Associate Saga with shipping
 
-        //send the create shipping command
-        commandGateway.send(new CreateShippingCommand(shippingId, invoiceCreatedEvent.orderId, invoiceCreatedEvent.paymentId));
+        // Send the create shipping command
     }
 
-    @SagaEventHandler(associationProperty = "orderId")
-    public void handle(OrderShippedEvent orderShippedEvent){
-        commandGateway.send(new UpdateOrderStatusCommand(orderShippedEvent.orderId, String.valueOf(OrderStatus.SHIPPED)));
-    }
-
-    @SagaEventHandler(associationProperty = "orderId")
-    public void handle(OrderUpdatedEvent orderUpdatedEvent){
-        SagaLifecycle.end();
-    }
 }

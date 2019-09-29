@@ -1,35 +1,22 @@
 package nl.amis.paymentmanagement.paymentservice.aggregates;
 
-import nl.amis.ecommerce.commands.CreateInvoiceCommand;
-import nl.amis.ecommerce.events.InvoiceCreatedEvent;
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.spring.stereotype.Aggregate;
 
-@Aggregate
+import java.math.BigDecimal;
+import java.util.logging.Logger;
+
 public class InvoiceAggregate {
 
-    @AggregateIdentifier
+    private final static Logger LOG = Logger.getLogger(InvoiceAggregate.class.getName());
+
     private String paymentId;
 
     private String orderId;
+
+    private BigDecimal price;
 
     private InvoiceStatus invoiceStatus;
 
     public InvoiceAggregate() {
     }
 
-    @CommandHandler
-    public InvoiceAggregate(CreateInvoiceCommand createInvoiceCommand){
-        AggregateLifecycle.apply(new InvoiceCreatedEvent(createInvoiceCommand.paymentId, createInvoiceCommand.orderId));
-    }
-
-    @EventSourcingHandler
-    protected void on(InvoiceCreatedEvent invoiceCreatedEvent){
-        this.paymentId = invoiceCreatedEvent.paymentId;
-        this.orderId = invoiceCreatedEvent.orderId;
-        this.invoiceStatus = InvoiceStatus.PAID;
-    }
 }

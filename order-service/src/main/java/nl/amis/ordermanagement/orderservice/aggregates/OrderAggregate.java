@@ -1,22 +1,13 @@
 package nl.amis.ordermanagement.orderservice.aggregates;
 
-import nl.amis.ecommerce.commands.CreateOrderCommand;
-
-import nl.amis.ecommerce.commands.UpdateOrderStatusCommand;
-import nl.amis.ecommerce.events.OrderCreatedEvent;
-import nl.amis.ecommerce.events.OrderUpdatedEvent;
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
-@Aggregate
 public class OrderAggregate {
 
-    @AggregateIdentifier
+    private final static Logger LOG = Logger.getLogger(OrderAggregate.class.getName());
+
     private String orderId;
 
     private ItemType itemType;
@@ -25,34 +16,11 @@ public class OrderAggregate {
 
     private String currency;
 
+    private String country;
+
     private OrderStatus orderStatus;
 
     public OrderAggregate() {
     }
 
-    @CommandHandler
-    public OrderAggregate(CreateOrderCommand createOrderCommand){
-        AggregateLifecycle.apply(new OrderCreatedEvent(createOrderCommand.orderId, createOrderCommand.itemType,
-                createOrderCommand.price, createOrderCommand.currency, createOrderCommand.orderStatus));
-    }
-
-    @EventSourcingHandler
-    protected void on(OrderCreatedEvent orderCreatedEvent){
-        this.orderId = orderCreatedEvent.orderId;
-        this.itemType = ItemType.valueOf(orderCreatedEvent.itemType);
-        this.price = orderCreatedEvent.price;
-        this.currency = orderCreatedEvent.currency;
-        this.orderStatus = OrderStatus.valueOf(orderCreatedEvent.orderStatus);
-    }
-
-    @CommandHandler
-    protected void on(UpdateOrderStatusCommand updateOrderStatusCommand){
-        AggregateLifecycle.apply(new OrderUpdatedEvent(updateOrderStatusCommand.orderId, updateOrderStatusCommand.orderStatus));
-    }
-
-    @EventSourcingHandler
-    protected void on(OrderUpdatedEvent orderUpdatedEvent){
-        this.orderId = orderId;
-        this.orderStatus = OrderStatus.valueOf(orderUpdatedEvent.orderStatus);
-    }
 }

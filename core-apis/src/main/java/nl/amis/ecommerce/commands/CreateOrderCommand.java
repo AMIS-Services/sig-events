@@ -1,12 +1,9 @@
 package nl.amis.ecommerce.commands;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
-
 import java.math.BigDecimal;
 
 public class CreateOrderCommand {
 
-    @TargetAggregateIdentifier
     public final String orderId;
 
     public final String itemType;
