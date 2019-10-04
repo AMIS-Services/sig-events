@@ -1,5 +1,7 @@
 package nl.amis.ecommerce.commands;
 
+import nl.amis.ecommerce.status.OrderStatus;
+
 import java.math.BigDecimal;
 
 public class CreateOrderCommand {
@@ -12,9 +14,9 @@ public class CreateOrderCommand {
 
     public final String currency;
 
-    public final String orderStatus;
+    public final OrderStatus orderStatus;
 
-    public CreateOrderCommand(String orderId, String itemType, BigDecimal price, String currency, String orderStatus) {
+    public CreateOrderCommand(String orderId, String itemType, BigDecimal price, String currency, OrderStatus orderStatus) {
         this.orderId = orderId;
         this.itemType = itemType;
         this.price = price;

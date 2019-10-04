@@ -1,5 +1,7 @@
 package nl.amis.ecommerce.events;
 
+import nl.amis.ecommerce.status.OrderStatus;
+
 import java.math.BigDecimal;
 
 public class OrderCreatedEvent {
@@ -12,9 +14,9 @@ public class OrderCreatedEvent {
 
     public final String currency;
 
-    public final String orderStatus;
+    public final OrderStatus orderStatus;
 
-    public OrderCreatedEvent(String orderId, String itemType, BigDecimal price, String currency, String orderStatus) {
+    public OrderCreatedEvent(String orderId, String itemType, BigDecimal price, String currency, OrderStatus orderStatus) {
         this.orderId = orderId;
         this.itemType = itemType;
         this.price = price;

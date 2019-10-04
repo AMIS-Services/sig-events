@@ -1,6 +1,6 @@
 package nl.amis.ordermanagement.orderservice.services.commands;
 
-import nl.amis.ordermanagement.orderservice.aggregates.OrderStatus;
+import nl.amis.ecommerce.status.OrderStatus;
 import nl.amis.ecommerce.commands.CreateOrderCommand;
 import nl.amis.ordermanagement.orderservice.dto.commands.OrderCreateDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -21,6 +21,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     @Override
     public CompletableFuture<String> createOrder(OrderCreateDTO orderCreateDTO) {
         return commandGateway.send(new CreateOrderCommand(UUID.randomUUID().toString(), orderCreateDTO.getItemType(),
-                orderCreateDTO.getPrice(), orderCreateDTO.getCurrency(), String.valueOf(OrderStatus.CREATED)));
+                orderCreateDTO.getPrice(), orderCreateDTO.getCurrency(), OrderStatus.CREATED));
     }
 }

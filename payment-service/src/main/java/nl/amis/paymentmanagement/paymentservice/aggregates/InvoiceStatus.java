@@ -2,5 +2,5 @@ package nl.amis.paymentmanagement.paymentservice.aggregates;
 
 public enum InvoiceStatus {
 
-    PAID, PAYMENT_REVERSED
+    PAID, PAYMENT_FAILED
 }

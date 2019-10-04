@@ -10,8 +10,6 @@ public class OrderCreateDTO {
 
     private String currency;
 
-    private String country;
-
     public String getItemType() {
         return itemType;
     }
@@ -34,13 +32,5 @@ public class OrderCreateDTO {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 }
